@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const baseURL = 'http://40.71.68.52:8081/api'
+const baseURL = 'https://mybook.use-api-services.com/api'
 
 const makeRequest = async (options, addToken = false) => {
     try {
