@@ -16,12 +16,15 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@capacitor/core": "^6.0.0",
     "@headlessui/vue": "^1.6.5",
     "@vueuse/core": "^8.9.0",
+    "ag-grid-vue3": "^31.3.1",
     "apexcharts": "^3.35.3",
     "gsap": "^3.11.5",
     "nprogress": "^0.2.0",
     "perfect-scrollbar": "^1.5.5",
+    "sweetalert2": "^11.10.8",
     "vue": "^3.2.37",
     "vue-router": "^4.1.1",
     "vue-toastification": "^2.0.0-rc.5"
@@ -29,6 +32,7 @@
   "devDependencies": {
     "@iconify/vue": "^4.1.1",
     "@tailwindcss/forms": "^0.5.2",
+    "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "autoprefixer": "^10.4.7",

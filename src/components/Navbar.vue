@@ -12,11 +12,17 @@ import {
 import Button from '@/components/Button.vue'
 import Logo from '@/components/Logo.vue'
 import Dropdown from '@/components/Dropdown.vue'
-import DropdownLink from '@/components/DropdownLink.vue'
 import userAvatar from '@/assets/images/avatar.jpg'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
-
+const logout = () => {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('adminData')
+    localStorage.removeItem('role')
+    router.push({ name: 'Login' })
+}
 onMounted(() => {
     document.addEventListener('scroll', handleScroll)
 })
@@ -46,8 +52,18 @@ onUnmounted(() => {
                 class="md:hidden"
                 srText="Toggle dark mode"
             >
-                <Icon icon="mdi:weather-night" v-show="!isDark" aria-hidden="true" :class="iconSizeClasses" />
-                <Icon icon="mdi:white-balance-sunny" v-show="isDark" aria-hidden="true" :class="iconSizeClasses" />
+                <Icon
+                    icon="mdi:weather-night"
+                    v-show="!isDark"
+                    aria-hidden="true"
+                    :class="iconSizeClasses"
+                />
+                <Icon
+                    icon="mdi:white-balance-sunny"
+                    v-show="isDark"
+                    aria-hidden="true"
+                    :class="iconSizeClasses"
+                />
             </Button>
         </div>
 
@@ -60,8 +76,18 @@ onUnmounted(() => {
                 class="hidden md:inline-flex"
                 srText="Toggle dark mode"
             >
-                <Icon icon="mdi:weather-night" v-show="!isDark" aria-hidden="true" :class="iconSizeClasses" />
-                <Icon icon="mdi:white-balance-sunny" v-show="isDark" aria-hidden="true" :class="iconSizeClasses" />
+                <Icon
+                    icon="mdi:weather-night"
+                    v-show="!isDark"
+                    aria-hidden="true"
+                    :class="iconSizeClasses"
+                />
+                <Icon
+                    icon="mdi:white-balance-sunny"
+                    v-show="isDark"
+                    aria-hidden="true"
+                    :class="iconSizeClasses"
+                />
             </Button>
 
             <Button
@@ -78,7 +104,12 @@ onUnmounted(() => {
                     aria-hidden="true"
                     :class="iconSizeClasses"
                 />
-                <Icon icon="mdi:arrow-collapse-all" v-show="isFullscreen" aria-hidden="true" :class="iconSizeClasses" />
+                <Icon
+                    icon="mdi:arrow-collapse-all"
+                    v-show="isFullscreen"
+                    aria-hidden="true"
+                    :class="iconSizeClasses"
+                />
             </Button>
 
             <!-- Dropdwon -->
@@ -95,7 +126,12 @@ onUnmounted(() => {
                     </button>
                 </template>
                 <template #content>
-                    <DropdownLink to="#">Log Out</DropdownLink>
+                    <button
+                        @click="logout"
+                        class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out dark:text-white dark:hover:bg-dark-eval-2"
+                    >
+                        Log Out
+                    </button>
                 </template>
             </Dropdown>
         </div>
@@ -111,7 +147,12 @@ onUnmounted(() => {
             },
         ]"
     >
-        <Button icon="mdi:magnify" iconOnly variant="secondary" srText="Search" />
+        <Button
+            icon="mdi:magnify"
+            iconOnly
+            variant="secondary"
+            srText="Search"
+        />
 
         <router-link :to="{ name: 'Dashboard' }">
             <Logo class="w-10 h-10" />
@@ -126,8 +167,18 @@ onUnmounted(() => {
             class="md:hidden"
             srText="toggle menu"
         >
-            <Icon icon="mdi:menu" v-show="!sidebarState.isOpen" aria-hidden="true" :class="iconSizeClasses" />
-            <Icon icon="mdi:window-close" v-show="sidebarState.isOpen" aria-hidden="true" :class="iconSizeClasses" />
+            <Icon
+                icon="mdi:menu"
+                v-show="!sidebarState.isOpen"
+                aria-hidden="true"
+                :class="iconSizeClasses"
+            />
+            <Icon
+                icon="mdi:window-close"
+                v-show="sidebarState.isOpen"
+                aria-hidden="true"
+                :class="iconSizeClasses"
+            />
         </Button>
     </div>
 </template>

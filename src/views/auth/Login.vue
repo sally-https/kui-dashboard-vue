@@ -3,8 +3,12 @@ import { reactive } from 'vue'
 import InputIconWrapper from '@/components/InputIconWrapper.vue'
 import Label from '@/components/Label.vue'
 import Input from '@/components/Input.vue'
-import Checkbox from '@/components/Checkbox.vue'
 import Button from '@/components/Button.vue'
+import { post } from '@/plugins/http'
+import { successToast, errorToast } from '@/toast/index'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const loginForm = reactive({
     email: '',
@@ -13,7 +17,67 @@ const loginForm = reactive({
     processing: false,
 })
 
-const login = () => {}
+const login = async () => {
+    if (loginForm.email && loginForm.password) {
+        loginForm.processing = true
+
+        try {
+            const response = await post('/admin-login', {
+                email: loginForm.email,
+                password: loginForm.password,
+                remember: loginForm.remember,
+            })
+
+            if (response.status === 200) {
+                // Save the token and admin data to local storage
+                localStorage.setItem('accessToken', response.data.token)
+                localStorage.setItem('role', response.data.role)
+                localStorage.setItem(
+                    'adminData',
+                    JSON.stringify(response.data.admin)
+                )
+                successToast({
+                    title: 'Admin Login Successful',
+                    text: 'Welcome back!',
+                })
+                router.push({ name: 'Dashboard' })
+            } else {
+                if (response.data.errors) {
+                    // Extract the error message from the response data
+                    const errorMessage =
+                        response.data.message || 'Invalid credentials'
+                    const errorDetails = Object.values(response.data.errors)
+                        .flat()
+                        .join(', ')
+                    errorToast({
+                        title: 'Login Failed',
+                        text: `${errorMessage}: ${errorDetails}`,
+                    })
+                } else {
+                    errorToast({
+                        title: 'Login Failed',
+                        text: response.data.message,
+                    })
+                }
+            }
+            // Reset form fields
+            loginForm.email = ''
+            loginForm.password = ''
+            loginForm.remember = false
+        } catch (error) {
+            // Handle error
+            console.error(error)
+
+            // Show error toast
+            errorToast({
+                title: 'Login Failed',
+                text: 'The Problem is not from you! Please try again.',
+            })
+        } finally {
+            loginForm.processing = false
+        }
+    }
+}
 </script>
 
 <template>
@@ -56,24 +120,6 @@ const login = () => {}
                 </InputIconWrapper>
             </div>
 
-            <!-- Remember me -->
-            <div class="flex items-center justify-between">
-                <label class="flex items-center">
-                    <Checkbox
-                        name="remember"
-                        v-model:checked="loginForm.remember"
-                    />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-
-                <router-link
-                    :to="{ name: 'ForgotPassword' }"
-                    class="text-sm text-blue-500 hover:underline"
-                >
-                    Forgot your password?
-                </router-link>
-            </div>
-
             <!-- Login button -->
             <div>
                 <Button
@@ -87,15 +133,6 @@ const login = () => {}
             </div>
 
             <!-- Register link -->
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                Don't have an account?
-                <router-link
-                    :to="{ name: 'Register' }"
-                    class="text-blue-500 hover:underline"
-                >
-                    Register
-                </router-link>
-            </p>
         </div>
     </form>
 </template>
